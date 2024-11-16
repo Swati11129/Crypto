@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -16,9 +16,18 @@ const MarketDepthChart = () => {
   }, []);
 
   const fetchDepth = async () => {
-    const res = await fetch("https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=10");
-    const data = await res.json();
-    setDepthData(data);
+    try {
+      const res = await fetch("https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=10");
+      
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setDepthData(data);
+    } catch (error) {
+      console.error("Error fetching market depth data:", error);
+    }
   };
 
   const chartData = {
